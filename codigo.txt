@@ -1,0 +1,69 @@
+##Ejecutar como super usuario
+sudo su		
+
+##Crear directorio para almacenar todos los comprimidos
+mkdir software
+
+##Entrar al directorio
+cd software
+
+##Descargar todos los paquetes
+wget http://www.lillo.org.ar/phylogeny/tnt/tnt64-no-tax-limit.zip		##TNT
+wget http://phylosolutions.com/paup-test/paup4a163_ubuntu64.gz			##PAUP		
+wget https://github.com/MesquiteProject/MesquiteCore/releases/download/untagged-8cc6db36651fb5d9acec/Mesquite351-Linux.tgz	##Mesquite
+wget https://www.amnh.org/content/download/67796/1174582/version/3/file/poy_5.1.1-src.tar.gz	##Poy
+git clone https://github.com/NBISweden/MrBayes.git ##MrBayes
+wget http://www.atgc-montpellier.fr/download/binaries/phyml/PhyML-3.1.zip	##PhyML
+
+##Instalar PhyMl
+unzip PhyML-3.1.zip 			##Descomprimir 
+cd PhyML-3.1/					##Entrar al directorio
+cp PhyML-3.1_linux64 /bin		##Copiar el binario a /bin
+
+##Instalar TNT
+mkdir tnt													##Crear directorio
+unzip tnt64-no-tax-limit.zip -d tnt							##Descomprimir en el direcotrio
+cd tnt														##Entrar al directorio
+cp tnt /bin													##Copiar el binario /bin
+
+##Instala PAUP
+gzip -d paup4a163_ubuntu64.gz								##Descomprimir
+mkdir paup													##Crear el directorio 
+mv paup4a163_ubuntu64 paup									##Mover al directorio
+cp paup4a163_ubuntu64 /bin									##Copiar el binario a /bin
+mv paup4a163_ubuntu64 paup									##Renombrar
+
+##Instalar POY
+mkdir poy									##Crear directorio
+tar -xlvf poy_5.1.1-src.tar.gz -C poy		##Descomprimir
+apt-get install mpich						##Para poder correr en paralelo
+apt-get update								##Actalizar repositorios
+apt-get upgrade
+apt-get install build-essential				##Actualizar el compilador de C en ubuntu
+apt-get install ocaml						##Instalar ocaml
+
+##Compilar Zlib
+wget http://www.zlib.net/zlib-1.2.11.tar.gz
+tar -xvzf zlib-1.2.8.tar.gz
+cd zlib-1.2.8
+./configure --prefix=/usr/local/zlib 			
+make 											
+make install	 								
+
+cd poy/poy_5.1.1/src										##Entrar en el directorio
+./configure --enable-interface=flat --enable-mpi CC=mpicc	##Habilitar poy para correr en paralelo
+make
+make install
+
+##Instalar Mesquite
+tar -xvzf Mesquite351-Linux.tgz								##Descomprimir
+
+##Instalar MrBayes
+sudo apt-get install automake autoconf pkg-config autoconf-archive	##Instalar o actualizar programas requeridos
+cd MrBayes															##Entrar al directorio
+autoreconf -i														##Crear el aarchivo ./configure para que reconozca las librerias de MPI
+./configure --with-beagle=no --with-mpi								##Ejecutar el ./configure deshabilitando BEAGLE y habilitando MPI
+make
+make install
+
+exit		##Para salir del super-usuario													
