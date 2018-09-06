@@ -49,6 +49,18 @@ col.cambio <- function(vector, arbol) {
 }
 
 
+##Ejercicio 4 (Adicional):
+ml<- read.tree("ET_LikeLihood.tre") #leer arbol de MrBayes
+mb<- read.tree("mrbayes.tre")       #leer arbol de Maximun likelihood
+layout(matrix(1:2, 1, 2))           #dividir la pantalla en dos partes iguales verticalmente
+par(mar = c(4, 0, 0, 0))            #Asignar margenes a las graficas
+plot.phylo(ml, type="phylogram", use.edge.length = F, x.lim = c(0,30)) #graficar arbol de ml sin long de ramas
+nodelabels(ml$node.label, bg="white", frame = "none", adj = c(-0.1,0.5), font=1, cex=0.8)  #agregar valores de soporte a los nodos
+plot.phylo(mb, type="phylogram", direction = "l", use.edge.length=F, x.lim = c(0,30))   # graficar arbol de mb hacia la izquierda
+nodelabels(mb$node.label, bg="white", frame = "none", adj = c(1.2,0.5), font=1, cex=0.8) #agregar soporte a los nodos
+#lo anterior asume topologías distintas y por eso se muestran los tiplabels de ambos arboles, en caso de que las topologías
+#sean iguales, no se muestran los tiplabels de alguno de los arboles de la siguiente forma:
+plot.phylo(mb, type="phylogram", direction = "l", show.tip.label=F ,use.edge.length=F, x.lim = c(0,30))
 
 
 
