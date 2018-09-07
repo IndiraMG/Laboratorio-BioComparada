@@ -14,3 +14,15 @@ plot.phylo(tree) #graficar
 
 BOOTSTRAP<-boot.phylo(tree,sylvia.clus, FUN = function(xx) nj(dist.dna(xx)), B=1000, trees = T)
 s <- as.splits(BOOTSTRAP$trees)
+
+#calculo de likelihood:
+write.dna(sylvia.clus, "sylvia.txt") #generar archivo en formato newick
+phyml.sylvia<-phymltest("sylvia.txt", execname="~/phyml")
+summary(phyml.sylvia) #mostrar comparación entre modelos
+TR<-read.tree(silvia.tree.txt)
+mltr.sylvia<-TR[[28]]
+mltr.sylvia$tip.label<-taxa.sylvia[mltr.sylvia$tip.label]
+mltr.sylvia<-root(mltr.sylvia,"Chamaeae_fasciata", resolve.rast=T)
+plot.phylo(mltr.sylvia no.margin=T)
+at.scale.bar(length=0,1)                      
+                      
