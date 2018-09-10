@@ -1,4 +1,4 @@
-### Ejercicio 1. ###
+### EJERCICIO 1:
 library("ape")   #cargar la libreria
 data("bird.orders")   #cargar datos
 plot(bird.orders, no.margin = T)  #graficar arbol
@@ -12,7 +12,7 @@ nodelabels(node = 25:45, pch = 21, cex = 2, bg = color[-1])  #agregar etiquetas 
 legend("topleft", legend = c("90 <= BP", "70 <= BP < 90", "BP < 70"), pch = 21, pt.bg = c("red","orange","yellow"), 
        pt.cex = 2, bty = "n") #agregar leyenda en esquina superior izquierda
 
-### Ejercicio 2 ###
+### EJERCICIO 2:
 relaciones <- which.edge(bird.orders, 1:5) #Guardar en vector las relaciones que involucran los nodos 1 al 5
 color2 <- rep("black", Nedge(bird.orders)) #Crear vector con color negro y longitud igual a nodos totales
 color2[relaciones] <- "blue"  #cambiar las posiciones de color2, que estan guardadas en relaciones, por "blue"
@@ -25,7 +25,7 @@ plot(bird.orders,show.tip.label = F, x.lim = info_plot$x.lim ) #Graficar sin nom
 tiplabels(bird.orders$tip.label, adj = -0.1, col = c(rep("blue",5), rep("black", 18)), frame="n")
 
 
-## Ejercicio 3: Función que recibe árbol y vector con estados de caracter y devuelve filograma con ramas coloreadas dependiendo 
+### EJERCICIO 3: Función que recibe árbol y vector con estados de caracter y devuelve filograma con ramas coloreadas dependiendo 
 #del tipo de cambio:
 
 col.cambio <- function(vector, arbol) {
@@ -49,7 +49,7 @@ col.cambio <- function(vector, arbol) {
 }
 
 
-##Ejercicio 4 (Adicional):
+### EJERCICIO 4 (Adicional):
 ml<- read.tree("ET_LikeLihood.tre") #leer arbol de MrBayes
 mb<- read.tree("mrbayes.tre")       #leer arbol de Maximun likelihood
 layout(matrix(1:2, 1, 2))           #dividir la pantalla en dos partes iguales verticalmente
@@ -59,8 +59,25 @@ nodelabels(ml$node.label, bg="white", frame = "none", adj = c(-0.1,0.5), font=1,
 plot.phylo(mb, type="phylogram", direction = "l", use.edge.length=F, x.lim = c(0,30))   # graficar arbol de mb hacia la izquierda
 nodelabels(mb$node.label, bg="white", frame = "none", adj = c(1.2,0.5), font=1, cex=0.8) #agregar soporte a los nodos
 #lo anterior asume topologías distintas y por eso se muestran los tiplabels de ambos arboles, en caso de que las topologías
-#sean iguales, no se muestran los tiplabels de alguno de los arboles de la siguiente forma:
-plot.phylo(mb, type="phylogram", direction = "l", show.tip.label=F ,use.edge.length=F, x.lim = c(0,30))
+#sean iguales, se divide la pantalla en tres, para graficar a cada extremo las topologías sin tiplabels y graficar estos en
+#el centro, así:
+par( mfrow= c(1,3)) #dividir la pantalla en una fila y tres columnas
+# graficar filograma, usando long de ramas, limites ajustados en eje x, sin tiplabels y sin margen: 
+plot.phylo(ml, type="phylogram", use.edge.length = T, x.lim = c(0,0.35), show.tip.label = F, no.margin = T)
+#agregar soportes a los nodos, sin marco, ajustar posición de las etiquetas, asignar fuente y tamaño:
+nodelabels(ml$node.label, frame = "none", adj = c(-0.1,0.5), font=1, cex=0.8)
+#graficar 22 lineas punteadas color gris, para ubicar mejor el taxon correspondiente a cada rama:
+abline(h=1:22, lty=2, col="gray")
+#graficar la topología con edge en blanco, para mostrar solo los tiplabels y ajustar limites para centrar:
+plot(ml,type= "phylogram", edge.color = "white", show.tip.label = T, use.edge.length = F, x.lim = c(20,40), adj= 0.5, cex=1.5)
+# graficar segunda topología tipo filograma, limites ajustados en eje x, sin tiplabels, sin margen y hacia la izquierda:
+plot.phylo(mb, type="phylogram", use.edge.length=T, x.lim = c(0.04,0.3), show.tip.label = F, no.margin = T, direction = "l" )
+#agregar soportes a los nodos, sin marco, ajustar posición de las etiquetas, asignar fuente y tamaño:
+nodelabels(mb$node.label, frame = "none", adj = c(1.2,0.5), font=1, cex=0.8)
+#graficar 22 lineas punteadas color gris, para ubicar mejor el taxon correspondiente a cada rama:
+abline(h=1:22, lty=2, col="gray")
+
+
 
 
 
