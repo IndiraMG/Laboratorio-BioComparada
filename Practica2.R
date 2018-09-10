@@ -59,8 +59,8 @@ nodelabels(ml$node.label, bg="white", frame = "none", adj = c(-0.1,0.5), font=1,
 plot.phylo(mb, type="phylogram", direction = "l", use.edge.length=F, x.lim = c(0,30))   # graficar arbol de mb hacia la izquierda
 nodelabels(mb$node.label, bg="white", frame = "none", adj = c(1.2,0.5), font=1, cex=0.8) #agregar soporte a los nodos
 #lo anterior asume topologías distintas y por eso se muestran los tiplabels de ambos arboles, en caso de que las topologías
-#sean iguales, se divide la pantalla en tres, para graficar a cada extremo las topologías sin tiplabels y graficar estos en
-#el centro, así:
+#sean iguales, se divide la pantalla en tres, para graficar a cada extremo las topologías sin tiplabels y graficar los tiplabels
+# en el centro, así:
 par( mfrow= c(1,3)) #dividir la pantalla en una fila y tres columnas
 # graficar filograma, usando long de ramas, limites ajustados en eje x, sin tiplabels y sin margen: 
 plot.phylo(ml, type="phylogram", use.edge.length = T, x.lim = c(0,0.35), show.tip.label = F, no.margin = T)
