@@ -5,7 +5,7 @@ x <- c("Z73494", x)  #agregarle ese codigo a x
 sylvia.seq <- read.GenBank(x) # leer desde genbank los codigos guardados en x
 sylvia.clus <- clustal(sylvia.seq) #alinear por clustal
 
-# claculo de distancia y bootstrap
+#METODO DE DISTANCIA Y BOOTSTRAP:
 alin<-dist.dna(sylvia.clus) # construir matriz de distancia cambiando la clase a dist
 tree<-nj(alin) #construir arbol por metodo neighbor joining
 tree<-root(tree, "AJ534526", resolve.root = T) #enraizar arbol y resolver como nodo bifurcado
@@ -13,14 +13,13 @@ funcion<-function(xx) root(nj(dist.dna(xx, p=TRUE)), "AJ534526") #definir funci�
 boot<-boot.phylo(tree,sylvia.clus, FUN = funcion, B=200, rooted  = T) #Bootstrap con 200 replicas
 taxa.sylvia <- attr(sylvia.seq, "species") # crear vector con nombres de especies guardados en Sylvia.seq
 names(taxa.sylvia) <- names(sylvia.seq) #asignar a los nombres guardados en taxa.sylvia, los nombres guardados en sylvia.seq
-nj.est <- tree # guardar arbol en un nuevo objeto para poder modificarlo
-nj.est$tip.label <- taxa.sylvia[tree$tip.label] # asignar los nombres de taxa.sylvia a los labels del arbol creado anteriormente
-plot(nj.est, no.margin = TRUE) # graficar arbol sin margenes
+tree$tip.label <- taxa.sylvia[tree$tip.label] # asignar los nombres de taxa.sylvia a los labels del arbol creado anteriormente
+plot(tree, no.margin = TRUE) # graficar arbol sin margenes
 #agregar soporte a los nodos diviendo el resultado del boot en 200 y tilizando 2 decimales. No usar marco y definir posición y tamaño:
 nodelabels(round(boot/200, 2), frame= "none", adj = c(-0.25,0), cex=0.8) 
 add.scale.bar(length = 0.01) # agregar linea de escala 
 
-#calculo de likelihood:
+#CALCULO DE LIKELIHOOD Y BOOTSTRAP:
 write.dna(sylvia.clus, "sylvia.txt") # generar archivo con alineamiento en formato newick 
 phyml.sylvia<-phymltest("sylvia.txt", execname="phyml") #llamar matriz y ejecutar phyml
 summary(phyml.sylvia) # muestra resultados del test phyml
@@ -30,19 +29,24 @@ mltr.sylvia<-TR[[28]] # extraer el árbol 28 (último árbol) y guardar en nuevo
 mltr.sylvia$tip.label<-taxa.sylvia[mltr.sylvia$tip.label] # asignar los nombres de taxa.sylvia a los labels del arbol mltr.sylvia
 mltr.sylvia<-root(mltr.sylvia,"Chamaea_fasciata") # enraizar
 plot.phylo(mltr.sylvia) #graficar árbol
-add.scale.bar(length=0.1) #graficar barra de escala
+add.scale.bar(length=0.1) #graficar barra de escala                      
+install.packages("phangorn") #instalar phangorn
+library(phangorn) #llamar paquete phangorn
+clus2<-sylvia.clus #guardar alineamiento en nuevo objeto
+dimnames(clus2)[[1]]<- attr(sylvia.seq, "species") # cambiar las etiquetas de los genes por los nombres de las especies
+fit<-pml(tree, as.phyDat(clus2)) # Realizar busqueda inicial con arbol creado en metodo de distancia
+# Asignar parametros y optimizar busqueda:
+optree<-optim.pml(fit, optInv = T, optGamma = T, optBf = T, model="GTR", optRooted = T,rearrangement = "stochastic")
+bs<-bootstrap.pml(optree, bs=1000) #Realizar bootstrap
+plotBS(optree$tree,bs, type = "phylogram", use.edge.length = TRUE) #Graficar abol con valores de bootstrap
 
+# GRAFICAR COMPARACIÓN DE TOPOLOGÍAS Y SOPORTE:
+par( mfrow= c(1,3), mai=c(0,0,0,0))
+plot.phylo(tree, type="phylogram", use.edge.length = T, x.lim = c(0,0.095), show.tip.label = F, no.margin = T, align.tip.label = T, col = "white")
+nodelabels(round(boot/1000, 2), frame= "none", adj = c(-0.25,0), cex=0.8)
+abline(h=1:25, lty=2, col="gray")
+plot(nj.est,type= "phylogram", edge.color = "white", show.tip.label = F, use.edge.length = F, x.lim = c(18,30))
+tiplabels(nj.est$tip.label, adj = 0.5, frame="none", cex=1.5)
+plotBS(optree$tree, bs, type="phylogram", x.lim = c(0.35,0.5), show.tip.label = F, no.margin = T, direction = "l" )
+abline(h=1:25, lty=2, col="gray")
 
-
-
-
-
-                     
-                      
-
-                      
-     
-                      
-                      
-install.packages("phangorn")
-library(phangorn)
