@@ -42,12 +42,15 @@ plotBS(optree$tree,bs, type = "phylogram", use.edge.length = TRUE) #Graficar abo
 
 # GRAFICAR COMPARACIÓN DE TOPOLOGÍAS Y SOPORTE:
 par(mfrow= c(1,3), mai=c(0,0,0,0)) #dividir pantalla en una fila y tres columnas
-# garficar arbol tipo filograma, con long de ramas, ajustar limites en x, no mostrar tiplabels y sin margen:
+# graficar arbol tipo filograma, con long de ramas, ajustar limites en x, no mostrar tiplabels y sin margen:
 plot.phylo(tree, type="phylogram", use.edge.length = T, x.lim = c(0,0.095), show.tip.label = F, no.margin = T)
 nodelabels(round(boot/200, 2), frame= "none", adj = c(-0.25,0), cex=0.8) #agregar soporte a los nodos 
-abline(h=1:25, lty=2, col="gray")
-plot(nj.est,type= "phylogram", edge.color = "white", show.tip.label = F, use.edge.length = F, x.lim = c(18,30))
-tiplabels(nj.est$tip.label, adj = 0.5, frame="none", cex=1.5)
+# graficar arbol tipo filograma, blanco y sin tiplabels, fijando limites en eje x:
+plot(tree,type= "phylogram", edge.color = "white", show.tip.label = F, use.edge.length = F, x.lim = c(18,30))
+tiplabels(tree$tip.label, adj = 0.5, frame="none", cex=1.5) #graficar tiplabels en el centro de la pantalla
+#graficar arbol de likelihood con valores de bootstrap, sin tiplabels y hacia la izquierda:
 plotBS(optree$tree, bs, type="phylogram", x.lim = c(0.35,0.5), show.tip.label = F, no.margin = T, direction = "l" )
-abline(h=1:25, lty=2, col="gray")
+
+
+
 
