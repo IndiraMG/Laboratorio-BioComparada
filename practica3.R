@@ -1,4 +1,3 @@
-####EJERCICIO 1:####
 
 library("ape") #Llamar la libreria
 x <- paste("AJ5345", 26:49, sep = "") # crear vector con codigo de Genbank
@@ -22,15 +21,23 @@ nodelabels(round(boot/200, 2), frame= "none", adj = c(-0.25,0), cex=0.8)
 add.scale.bar(length = 0.01) # agregar linea de escala 
 
 #calculo de likelihood:
-write.dna(sylvia.clus, "sylvia.txt") #generar archivo en formato newick
-phyml.sylvia<-phymltest("sylvia.txt", execname="~/phyml")
-summary(phyml.sylvia) #mostrar comparación entre modelos
-TR<-read.tree(silvia.tree.txt)
-mltr.sylvia<-TR[[28]]
-mltr.sylvia$tip.label<-taxa.sylvia[mltr.sylvia$tip.label]
-mltr.sylvia<-root(mltr.sylvia,"Chamaeae_fasciata", resolve.rast=T)
-plot.phylo(mltr.sylvia no.margin=T)
-at.scale.bar(length=0,1)                      
+write.dna(sylvia.clus, "sylvia.txt") # generar archivo con alineamiento en formato newick 
+phyml.sylvia<-phymltest("sylvia.txt", execname="phyml") #llamar matriz y ejecutar phyml
+summary(phyml.sylvia) # muestra resultados del test phyml
+plot(phyml.sylvia) #permite observar cual es el mejor modelo
+TR<-read.tree("sylvia.txt_phyml_tree.txt") #leer y guardar archivo de arboles generado por phyml
+mltr.sylvia<-TR[[28]] # extraer el árbol 28 (último árbol) y guardar en nuevo objeto
+mltr.sylvia$tip.label<-taxa.sylvia[mltr.sylvia$tip.label] # asignar los nombres de taxa.sylvia a los labels del arbol mltr.sylvia
+mltr.sylvia<-root(mltr.sylvia,"Chamaea_fasciata") # enraizar
+plot.phylo(mltr.sylvia) #graficar árbol
+add.scale.bar(length=0.1) #graficar barra de escala
+
+
+
+
+
+
+                     
                       
 
                       
